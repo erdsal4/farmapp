@@ -3,6 +3,7 @@ import '../LoginPage.dart';
 import '../main.dart';
 import 'dart:convert' show json, base64, ascii;
 import 'SiteSelection.dart';
+import 'SiteForm.dart';
 import '../Treatment/StateContainer.dart';
 import '../Treatment/SubmitTreatment.dart';
 
@@ -54,6 +55,35 @@ class HomePage extends StatelessWidget {
           ),
           Column(
             children: <Widget>[
+              
+              Container(
+                width: 300.0,
+                child: RaisedButton(
+                child: Text("Add treatments"),
+                onPressed: () =>
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TreatmentList()
+                    )
+                  )
+                )
+              ),
+              SizedBox(height: 20),
+              Container(
+                width: 300.0,
+                child: RaisedButton(
+                  child: Text("Add new Site"),
+                  onPressed: () =>
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SiteForm()
+                    )
+                  )
+                  )
+                ),
+              SizedBox(height: 20),
               Container(
                 width: 300.0,
                 child: RaisedButton(
@@ -67,22 +97,8 @@ class HomePage extends StatelessWidget {
                   )
                 )
               ),
-              SizedBox(height: 20),
-              Container(
-                width: 300.0,
-                child: RaisedButton(
-                child: Text("Add treatments"),
-                onPressed: () =>
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TreatmentList()
-                    )
-                  )
-                )
-              )
               
-              ]
+            ]
             )
           ]
         )
