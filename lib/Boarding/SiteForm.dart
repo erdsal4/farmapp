@@ -9,8 +9,11 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
 import '../main.dart';
-import 'HomePage.dart';
+import '../providers/User.dart';
+import '../providers/SiteProvider.dart';
 
 class _SiteData {
 
@@ -54,12 +57,11 @@ class _SiteFormState extends State<SiteForm> {
   
   void siteSubmit(_SiteData data, String token) async {
 
-    print("here");
+    print("heresubmitting");
      final Map<String,String> headers = {
        "x-access-token": token,
        "Content-Type": "application/json"
      };
-     print(data);
      print(jsonEncode(data));
      var res = await http.post(
        "$SERVER_DOMAIN/sites",
@@ -74,8 +76,10 @@ class _SiteFormState extends State<SiteForm> {
    }
   
   Widget build(BuildContext context) {
-    //final token = json.decode(MyInheritedWidget.of(context).jwt)['token'];
-    final token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjI0MWQ0OTBmZmZmMTA4ZDgzZWFmMGIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE1OTg3MTkwNTQsImV4cCI6MTU5ODgwNTQ1NH0.WMm8lWZiNPT9Qjspsvy8iuNKIr9Fpa4acwDECAp2QS4";
+
+    final token = Provider.of<User>(context, listen: false).token;
+    final sites = Provider.of<SiteProvider>(context, listen: false);
+
     return new Scaffold(
       appBar: new AppBar( title: new Text('Add Site')),
       body:  Material(
@@ -138,15 +142,18 @@ class _SiteFormState extends State<SiteForm> {
       ),
       floatingActionButton: new FloatingActionButton(
         child: new Icon(Icons.add),
-        onPressed: () {
+        onPressed: () async {
           final form = _formKey.currentState;
           if (form.validate()) {
             _data.city = "LA";
             _data.location = {
               "coordinates": [10,10]
             };
-            siteSubmit(_data, token);
-            Navigator.pop(context);
+            await siteSubmit(_data, token);
+            await sites.fetchSites(token);
+            Navigator.pop(
+                    context
+                  );
           } 
         },
       ),

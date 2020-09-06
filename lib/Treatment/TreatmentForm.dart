@@ -10,35 +10,9 @@ import 'StateContainer.dart';
 
 class _TreatmentData {
 
-
-  
   DateTime dateofPlanting;
     
   Map<String, dynamic> features = {};
- /*
-  String treatmentName = '',
-	  String cropType
-    num numberRows,
-    num numberSeeds,
-    Map<String, dynamic> irrigationSchedule = {}; 
-  
-            times: Number,
-            period: {
-		type: String,
-		enum: ['hours', 'days']
-            }
-	},
-	bedDim: [Number]	
-    }
-
-  
-  String treatmentName = '';
-  String cropType = '';
-  String numPlantRow = '';
-  String numSeed = '';
-  String irrSched = '';
-  String bedDim = '';
-  */
   
 }
 

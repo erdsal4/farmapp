@@ -1,112 +1,60 @@
 import 'package:flutter/material.dart';
-import '../LoginPage.dart';
-import '../main.dart';
-import 'dart:convert' show json, base64, ascii;
-import 'SiteSelection.dart';
-import 'SiteForm.dart';
-import '../Treatment/StateContainer.dart';
-import '../Treatment/SubmitTreatment.dart';
-
-class MyInheritedWidget extends InheritedWidget {
-  final String jwt;
-  final Map<String, dynamic> payload;
-
-  MyInheritedWidget({this.jwt, this.payload, Widget child}): super(child:child);
-  
-  @override
-  bool updateShouldNotify(MyInheritedWidget oldWidget) => false;
-
-  static MyInheritedWidget of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(MyInheritedWidget) as MyInheritedWidget);
-}
-  
-}
 
 class HomePage extends StatelessWidget {
-  HomePage(this.jwt,this.payload);
-
-  factory HomePage.fromBase64(String jwt) => 
-    HomePage(
-      jwt,
-      json.decode(
-        ascii.decode(
-          base64.decode(base64.normalize(jwt.split(".")[1]))
-        )
-      )
-    );  
-  
-  final String jwt;
-  final Map<String, dynamic> payload;
 
   @override
-  Widget build(BuildContext context){
-   return new MyInheritedWidget(
-    jwt: jwt,
-    payload: payload,
-    child: Scaffold(
-      appBar: AppBar(title: Text("Secret Data Screen")),
+  Widget build(BuildContext build) {
+    
+    return new Scaffold(
+      appBar: AppBar(title: Text("Home Page")),
       body: Container(
-        margin: EdgeInsets.fromLTRB(10.0, 100.0, 10.0, 100.0),
+        margin: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 10.0),
         padding: EdgeInsets.all(16),
         child: Column(
-        children: <Widget>[
-          Expanded(
-           child: SiteSelection()
-          ),
-          Column(
-            children: <Widget>[
-              
-              Container(
-                width: 300.0,
-                child: RaisedButton(
-                child: Text("Add treatments"),
-                onPressed: () =>
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TreatmentList()
-                    )
-                  )
-                )
-              ),
-              SizedBox(height: 20),
-              Container(
-                width: 300.0,
-                child: RaisedButton(
-                  child: Text("Add new Site"),
-                  onPressed: () =>
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SiteForm()
-                    )
-                  )
-                  )
-                ),
-              SizedBox(height: 20),
-              Container(
-                width: 300.0,
-                child: RaisedButton(
-                child: Text("Back to login screen"),
-                onPressed: () =>
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(title: "FarmApp") 
-                    )
-                  )
-                )
-              ),
-              
-            ]
+          children: <Widget>[
+            Container(
+              width: 400.0,
+              height: 200.0,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                alignment: Alignment.topLeft,
+                child: Text(' FARM\n APP'),
+              )
+            ),
+            Container(
+              width : 400.0,
+              height: 400.0,
+              child: 
+              GridView.count(
+              primary: false,
+              padding: const EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              children: <Widget>[
+                menuItem(" View\n Treatments\n in\n Site"),
+                menuItem(' Add\n Treatment\n to\n Site'),
+                menuItem(' Change\n Site'),
+                menuItem('Settings'),
+              ],
             )
+          )
           ]
         )
-    )
-    )
+      )
+    );
+  }
+}
+
+Widget menuItem(String str) {
+
+  return Container(
+    child:
+    FittedBox(
+      fit: BoxFit.contain,
+      child: Text(str),
+    ),
+    color: Colors.teal[100],
   );
-}
-
-}
-
   
+}

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'dart:convert' show json, base64, ascii;
+import 'package:provider/provider.dart';
+
 import 'LoginPage.dart';
-import './HomePage/HomePage.dart';
+import './Boarding/BoardingPage.dart';
 import 'main.dart';
 import './Treatment/StateContainer.dart';
 import './Treatment/SubmitTreatment.dart';
-import 'dart:convert' show json, base64, ascii;
+
+import './providers/User.dart';
+import './providers/SiteProvider.dart';
+
 
 
 class MyApp extends StatelessWidget {
 
-  final String title = "FarmApp";
-  
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
     if(jwt == null) return "";
@@ -19,35 +23,51 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new TreatmentStateContainer(
-      child: MaterialApp(
-      title: 'FarmApp Demo',
-      theme: new ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: FutureBuilder(
-        future: jwtOrEmpty,            
-        builder: (context, snapshot) {
-          if(!snapshot.hasData) return CircularProgressIndicator();
-          if(snapshot.data != "") {
-            var str = snapshot.data;
-            var jwt = str.split(".");
-            
-            if(jwt.length !=3) {
-              return LoginPage(title: title);
-            } else {
-              var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
-              if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
-                return HomePage(str, payload);
+    return new MultiProvider(
+      providers : [
+        Provider<User>(create: (context) => User()),
+        ChangeNotifierProvider<SiteProvider>(create: (context) => SiteProvider())
+        // , ChangeNotifierProvider<TreatmentList>(create: (context) => TreatmentList())
+      ],
+      child:   TreatmentStateContainer(
+        child: MaterialApp(
+          title: 'FarmApp Demo',
+          theme: new ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          home: Consumer<User>(
+          builder: (context1, user, child) {
+            return FutureBuilder(
+            future: jwtOrEmpty,            
+            builder: (context, snapshot) {
+              if(!snapshot.hasData) return CircularProgressIndicator();
+              if(snapshot.data != "") {
+                var str = snapshot.data;
+                var jwt = str.split(".");
+                
+                if(jwt.length !=3) {
+                  return LoginPage();
+                } else {
+                  var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
+
+                  user.payload = payload;
+                  user.jwt = str;
+                  user.token = json.decode(str)['token'];
+                  
+                  if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
+                    return BoardingPage();
+                  } else {
+                    return LoginPage();
+                  }
+                }
               } else {
-                return LoginPage(title:title);
+                return LoginPage();
               }
             }
-          } else {
-            return LoginPage(title:title);
-          }
+          );
         }
-      ), 
-  ));
+      )
+  ))
+);
   }
 }

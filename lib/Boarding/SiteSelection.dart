@@ -4,16 +4,17 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
 import '../main.dart';
-import 'HomePage.dart';
+import '../models/Site.dart';
+import '../providers/User.dart';
+import '../providers/SiteProvider.dart';
 
 class SiteSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myInheritedWidget = MyInheritedWidget.of(context);
-    print(myInheritedWidget.jwt);
-    
     return Scaffold(
       body: Column(
           children: <Widget>[
@@ -26,73 +27,104 @@ class SiteSelection extends StatelessWidget {
     
     }
   
-}
-
-class Site {
-
- // @JsonKey(name: '_id')  
-  
-  final String name;
-//  final String id;
-
-  const Site({this.name});
-
-  factory Site.fromJson(Map<String, dynamic> json) {
-    return Site(
-      name: json['name'],
-     // id: json['_id']
-    );
   }
   
-  
-}
-
-
 class MyDropdown extends StatefulWidget {
   MyDropdown({Key key}) : super(key: key);
 
   @override
   _MyDropdownState createState() => _MyDropdownState();
 }
-
-Future<List<Site>> fetchSites(jwt) async {
-
-    print(jwt);
-    final Map<String,String> headers = {
-      "x-access-token": jwt
-    };
-    final response = await http.get('$SERVER_DOMAIN/sites', headers: headers);
-    if (response.statusCode == 200) {
-      Iterable l = json.decode(response.body);
-      List<Site> sites = List<Site>.from(l.map((i) => Site.fromJson(i)));
-      return sites;
-    } else {
-      throw Exception('Failed to load sites');
-    }
-    
-  }
   
 
 class _MyDropdownState extends State<MyDropdown> {
 
   Site selectedSite;
-  Future<List<Site>> future;
-
+  List<Site> allSites;
+  SiteLoadingStatus status;  
+  
   @override
   void initState() {
+
+    final token = Provider.of<User>(context, listen: false).token;
+    final sites = Provider.of<SiteProvider>(context, listen:false);
+    sites.fetchSites(token);
+    print("initstate");
+
     super.initState();
   }
 
   @override    
-  void didChangeDependencies() {
-    final jwt = MyInheritedWidget.of(context).jwt;
-    future =  fetchSites(json.decode(MyInheritedWidget.of(context).jwt)['token']);
+  void didChangeDependencies() async {
+
+    final provider = Provider.of<SiteProvider>(context, listen:true);
+    allSites = provider.sites;
+    status = provider.status;
+    print("heredidchange");
     super.didChangeDependencies();
+    
   }
 
   @override
   Widget build(BuildContext context) {
-
+    print("herebuild");
+    final user = Provider.of<User>(context, listen: false);    
+    if(status == SiteLoadingStatus.Loading){
+      return Column(
+            children: <Widget>[
+              SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Awaiting result...'),
+              )
+            ]
+          );
+        }
+    else if(status == SiteLoadingStatus.Loaded){
+      return Container(
+        width: 300.0,
+        decoration: BoxDecoration(
+          border: Border.all(width: 3.0),
+          borderRadius: BorderRadius.all(Radius.circular(5.0))
+        ),
+        child: DropdownButtonHideUnderline(
+          child: ButtonTheme(
+            alignedDropdown: true,
+            child: DropdownButton<Site>(
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 16,
+              elevation: 16,
+              style: TextStyle(color: Colors.black),
+              value: selectedSite,
+              onChanged: (Site newSite) {
+                user.siteN = newSite.name;
+                setState(() {
+                    selectedSite = newSite;
+                });
+                
+              },
+              items: allSites.map<DropdownMenuItem<Site>>((Site site) {
+                  return DropdownMenuItem<Site>(
+                    value: site,
+                    child: Text(site.name, style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5)),
+                  );
+              }).toList(),
+              hint: Text('Select Site')
+            )
+          )
+        )
+      ); 
+    } else{
+      return Text("there was an error");
+    } 
+  }
+}       
+    
+    /*
     return FutureBuilder<List<Site>>(
       future: future,
       builder: (BuildContext context, AsyncSnapshot<List<Site>> snapshot) {
@@ -149,8 +181,8 @@ class _MyDropdownState extends State<MyDropdown> {
         }
       }
     );
-    }
-  }
+*/
+
 
    
 

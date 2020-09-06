@@ -3,39 +3,35 @@ import 'package:http/http.dart' as http;
 import './Boarding/BoardingPage.dart';
 import 'main.dart';
 import 'package:farmapp/widgets/displayDialog.dart';
-import './RegisterPage.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  RegisterPage({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _RegisterPageState createState() => new _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final formKey = GlobalKey<FormState>();
   String _email, _password, _username;
 
-  Future<String> attemptLogIn(String username, String password) async {
-
-    print(username + password);
+  Future<int> attemptSignUp(String username, String email, String password) async {
     var res = await http.post(
-      "$SERVER_DOMAIN/api/auth/login",
+      '$SERVER_DOMAIN/api/auth/register',
       body: {
         "name": username,
+        "email": email,
         "password": password
-      }
-    );
-    print(res.body);
-    if(res.statusCode == 200) return res.body;
-    return null;
+    });
+    print(res.statusCode);
+    return res.statusCode;
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text("Login"),
+          title: new Text("Register"),
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(vertical: 100),
@@ -56,6 +52,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
+                        labelText: 'email:'
+                    ),
+                    validator: (input) => input.isEmpty || !input.contains("@")
+              ? "enter a valid eamil" : null,
+                    onSaved: (input) => _email = input,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
                         labelText: 'Password:'
                     ),
                     validator: (input) => input.length < 6 ? 'You need at least 6 characters' : null,
@@ -68,19 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: RaisedButton(
-                          onPressed: _submitLogin,
-                          child: Text('Sign in'),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: RaisedButton(
-                          onPressed: gotoRegister,
+                          onPressed: _submitSignup,
                           child: Text('Sign Up'),
                         ),
                       )
@@ -94,35 +86,21 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void gotoRegister() {
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RegisterPage() 
-      )
-    );
-
-  }
-
-  void _submitLogin() async {
+  void _submitSignup() async {
     if(formKey.currentState.validate()){
       formKey.currentState.save();
 
-      var jwt = await attemptLogIn(_username, _password);
-      if(jwt != null) {
-        storage.write(key:"jwt", value: jwt);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BoardingPage() 
-          )
-        );
-      } else {
-        displayDialog(context, "An error occured", "No account was found matching that username and password.");
+      var res = await attemptSignUp(_username, _email,  _password);
+      print(res);
+      if(res == 200){
+      print("lann");
+      displayDialog(context, "Success", "The user was created. Log in now.");
+      }else if(res == 400){
+        displayDialog(context, "That username is already registered", "Please try to sign up using another username or log in if you already have an account."); 
+      }
+      else {
+        displayDialog(context, "Error", "An unknown error occurred.");
       }
     }
-    
   }
-
 }
