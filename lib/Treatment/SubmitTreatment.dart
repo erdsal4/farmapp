@@ -1,48 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'StateContainer.dart';
 import 'TreatmentForm.dart';
+import './treatment_widgets.dart';
+import 'package:farmapp/models/Treatment.dart';
+import 'package:farmapp/models/User.dart';
+import 'package:farmapp/widgets/buttonRouter.dart';
 
-
-class TreatmentList extends StatefulWidget {
+class SubmitTreatmentList extends StatefulWidget {
 
   @override
-  TreatmentListState createState() => new TreatmentListState(); 
-
+  SubmitTreatmentListState createState() => new SubmitTreatmentListState();
   
 }
 
-class TreatmentListState extends State<TreatmentList> {
+class SubmitTreatmentListState extends State<SubmitTreatmentList> {
 
   List<Treatment> treatments;  
 
   Widget get _currentTreatments {
-    return new ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.all(8),
-      itemCount: treatments.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-           leading: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () {},
-            child: Container(
-              width: 48,
-              height: 48,
-              padding: EdgeInsets.symmetric(vertical: 4.0),
-              alignment: Alignment.center,
-              child: Icon(Icons.edit),
-            ),
-          ),
-            title: Text('Treatment Name: ${treatments[index].features["treatmentName"]}'),
-            dense: false
-          );
-      },
-      separatorBuilder: (BuildContext context, int index) => const Divider()
-    );
+    print("currenttreatment");
+    return treatmentsList(treatments, false);
   }
     
   void _treatmentForm(BuildContext context) {
-    print("treatmentform");
+   
     Navigator.push(
       context,
       new MaterialPageRoute(
@@ -76,31 +59,52 @@ class TreatmentListState extends State<TreatmentList> {
   @override
   Widget build(BuildContext context) {
     final container = TreatmentStateContainer.of(context);
+    final user = Provider.of<User>(context, listen: false);
+    final siteN = user.siteN;
+    final token = user.token;
     treatments = container.treatments;
-    // print(treatments.length.toString());
+     
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Inherited Widget Test'),
       ),
-      body:
-     Container(
-       child: Column(
-         crossAxisAlignment: CrossAxisAlignment.center,
-         children: <Widget>[            
-            (treatments != null ? _currentTreatments : Text("No treatment added")),
+      body: Container(
+        margin: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Expanded(child : Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[            
+                  RichText(
+                    text: new TextSpan(
+                      style: new TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.black,
+                      ),
+                      children: <TextSpan>[
+                        new TextSpan(text: 'You are about to add treatments to '),
+                        new TextSpan(text: siteN, style: new TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  (treatments != null && treatments.length != 0 ? _currentTreatments : Text("No treatment in the list yet")),
             treatmentFormTile,
           ]
+      )),
+      Container(
+        width: 300.0,
+        child: RaisedButton(
+          child: Text("Save these treatments to site"),
+          onPressed: () => submitTreatments(treatments, token, context)
+      
         )
-      ), 
-        
-          floatingActionButton: new FloatingActionButton(
-            child: new Icon(Icons.add),
-            onPressed: () {
-              _treatmentForm(context); 
-            }
-          )
-
-    );
+      )     
+    ]
+  )
+),           
+);
   } 
   
 }

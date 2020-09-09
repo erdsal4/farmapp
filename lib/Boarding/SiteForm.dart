@@ -3,35 +3,14 @@
 // This example shows how to move the focus to the next field when the user
 // presses the ENTER key.
 import 'dart:async';
-import 'dart:convert';
-import 'dart:core';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 import '../main.dart';
-import '../providers/User.dart';
-import '../providers/SiteProvider.dart';
-
-class _SiteData {
-
-  
-  String name;
-  String city;
-  String state;
-  Map<String, dynamic> location = {};
-
-  Map<String, dynamic> toJson() =>
-  {
-    'name': name,
-    'city': city,
-    'state': state,
-    'location': location
-  };
-  
-}
+import './BoardingPage.dart';
+import '../models/User.dart';
+import 'package:farmapp/models/Site.dart';
 
 class SiteForm extends StatefulWidget {
   SiteForm({Key key}) : super(key: key);
@@ -43,43 +22,13 @@ class SiteForm extends StatefulWidget {
 class _SiteFormState extends State<SiteForm> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  _SiteData _data = new _SiteData();
-  
-  void displayDialog(context, title, text) => showDialog(
-    context: context,
-      builder: (context) =>
-      AlertDialog(
-          title: Text(title),
-          content: Text(text)
-        ),
-      );
+  Site _site = new Site();
 
-  
-  void siteSubmit(_SiteData data, String token) async {
-
-    print("heresubmitting");
-     final Map<String,String> headers = {
-       "x-access-token": token,
-       "Content-Type": "application/json"
-     };
-     print(jsonEncode(data));
-     var res = await http.post(
-       "$SERVER_DOMAIN/sites",
-       body: jsonEncode(data),
-       headers: headers
-     );
-     print(res.statusCode);
-     print(res.body);
-     if(res.statusCode != 200) {
-        displayDialog(context, "An error occured", "Could not add the site.");
-     };
-   }
   
   Widget build(BuildContext context) {
 
     final token = Provider.of<User>(context, listen: false).token;
-    final sites = Provider.of<SiteProvider>(context, listen: false);
-
+    
     return new Scaffold(
       appBar: new AppBar( title: new Text('Add Site')),
       body:  Material(
@@ -99,11 +48,10 @@ class _SiteFormState extends State<SiteForm> {
             Expanded(
               child: Shortcuts(
                 shortcuts: <LogicalKeySet, Intent>{
-            // Pressing enter on the field will now move to the next field.
-            LogicalKeySet(LogicalKeyboardKey.enter): NextFocusIntent(),
-          },
-          child: FocusTraversalGroup(
-            child: Form(
+                  LogicalKeySet(LogicalKeyboardKey.enter):NextFocusIntent(),
+                },
+                child: FocusTraversalGroup(
+                  child: Form(
               key: this._formKey,
               autovalidate: true,
               onChanged: () {
@@ -117,7 +65,7 @@ class _SiteFormState extends State<SiteForm> {
                         labelText: 'Site Name'
                       ),                        
                       onSaved: (String value) {
-                          _data.name = value;
+                          _site.name = value;
                         },
                       ),
                       SizedBox(height: 30),
@@ -126,14 +74,14 @@ class _SiteFormState extends State<SiteForm> {
                           labelText: 'Site State'
                         ),
                         onSaved: (String value) {
-                          _data.state = value;
+                          _site.state = value;
                               },
                             ),      
                           ]
                         )
                       )
-                    )               
-                  ),
+                    )
+                  )
                 )
               )
             ]
@@ -145,15 +93,17 @@ class _SiteFormState extends State<SiteForm> {
         onPressed: () async {
           final form = _formKey.currentState;
           if (form.validate()) {
-            _data.city = "LA";
-            _data.location = {
+            _site.city = "LA";
+            _site.location = {
               "coordinates": [10,10]
             };
-            await siteSubmit(_data, token);
-            await sites.fetchSites(token);
-            Navigator.pop(
-                    context
-                  );
+            await submitSite(_site, token, context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BoardingPage() 
+              )  
+            );
           } 
         },
       ),

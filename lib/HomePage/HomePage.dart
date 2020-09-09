@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:farmapp/Treatment/ViewTreatments.dart';
+import 'package:farmapp/Treatment/SubmitTreatment.dart';
+import 'package:farmapp/Boarding/BoardingPage.dart';
 
 class HomePage extends StatelessWidget {
 
   @override
-  Widget build(BuildContext build) {
+  Widget build(BuildContext context) {
     
     return new Scaffold(
       appBar: AppBar(title: Text("Home Page")),
@@ -18,7 +21,7 @@ class HomePage extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.contain,
                 alignment: Alignment.topLeft,
-                child: Text(' FARM\n APP'),
+                child: Text(' Farm\n App'),
               )
             ),
             Container(
@@ -32,10 +35,10 @@ class HomePage extends StatelessWidget {
               mainAxisSpacing: 10,
               crossAxisCount: 2,
               children: <Widget>[
-                menuItem(" View\n Treatments\n in\n Site"),
-                menuItem(' Add\n Treatment\n to\n Site'),
-                menuItem(' Change\n Site'),
-                menuItem('Settings'),
+                menuItem(" View\n Treatments\n in\n Site", context, ViewPage()),
+                menuItem(' Add\n Treatment\n to\n Site', context, SubmitTreatmentList()),
+                menuItem(' Change\n Site', context, BoardingPage()),
+                menuItem('Settings', context, BoardingPage()),
               ],
             )
           )
@@ -46,15 +49,26 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Widget menuItem(String str) {
+Widget menuItem(String str, BuildContext context, Widget page) {
 
-  return Container(
-    child:
-    FittedBox(
-      fit: BoxFit.contain,
-      child: Text(str),
-    ),
-    color: Colors.teal[100],
+
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => page
+        )
+      );
+    },
+    child: Container(
+      alignment : Alignment.centerLeft,
+      padding : EdgeInsets.all(10.0),
+      child: Text(str,
+        style: TextStyle(fontSize: 20.0),
+      ),
+      color: Colors.teal[100],
+    )
   );
   
 }

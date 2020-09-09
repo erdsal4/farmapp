@@ -8,7 +8,7 @@ import 'main.dart';
 import './Treatment/StateContainer.dart';
 import './Treatment/SubmitTreatment.dart';
 
-import './providers/User.dart';
+import './models/User.dart';
 import './providers/SiteProvider.dart';
 
 

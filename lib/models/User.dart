@@ -8,7 +8,7 @@ class User {
   
   String token;
   String siteN;
-
+  String siteId;
   /*  
   String get token => token;
 

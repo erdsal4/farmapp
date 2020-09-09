@@ -10,7 +10,7 @@ import 'StateContainer.dart';
 
 class _TreatmentData {
 
-  DateTime dateofPlanting;
+  String dateofPlanting;
     
   Map<String, dynamic> features = {};
   
@@ -29,11 +29,10 @@ class _TreatmentFormState extends State<TreatmentForm> {
   _TreatmentData _data = new _TreatmentData();
   
   Widget build(BuildContext context) {
-    print("hello");
+
     final container = TreatmentStateContainer.of(context);
-    print(container);
     return new Scaffold(
-      appBar: new AppBar( title: new Text('Add treatment')),
+      appBar: new AppBar( title: new Text('Create new treatment')),
       body:  Material(
         child: Container(
           margin: EdgeInsets.fromLTRB(40, 10, 30, 10),
@@ -64,7 +63,9 @@ class _TreatmentFormState extends State<TreatmentForm> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ListView(
-                  children: <Widget>[                                                               TextFormField(
+                  children: <Widget>[
+                    
+                    TextFormField(
                       decoration: new InputDecoration(
                         labelText: 'Treatment Name'
                       ),                        
@@ -100,7 +101,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
           final form = _formKey.currentState;
            if (form.validate()) {
             container.addtoTreatmentList(
-              dateofPlanting: new DateTime.now(),
+              //dateofPlanting: new DateTime.now(),
               treatmentName: this._data.features["treatmentName"],
               cropType: "corn",
               numberRows: this._data.features["numberRows"],

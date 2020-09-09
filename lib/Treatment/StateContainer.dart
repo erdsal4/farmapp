@@ -1,15 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-
-class Treatment {
-
-  DateTime dateofPlanting;
-    
-  Map<String, dynamic> features = {};
-
-  Treatment(this.dateofPlanting, this.features);
-  
-}
+import 'package:farmapp/models/Treatment.dart';
 
 class TreatmentStateContainer extends StatefulWidget {
 
@@ -35,7 +26,7 @@ class TreatmentStateContainerState extends State<TreatmentStateContainer> {
 
   List<Treatment> treatments;
 
-  void addtoTreatmentList({DateTime dateofPlanting,
+  void addtoTreatmentList({String dateofPlanting,
 	    String treatmentName,
       String cropType,
       num numberRows,
@@ -59,13 +50,18 @@ class TreatmentStateContainerState extends State<TreatmentStateContainer> {
       });
     } else {
     
-    print(treatment);
     setState(() {
         treatments.add(treatment);
     });
     print(treatments);
   }
 }
+
+void clear(){
+  if (treatments != null) treatments.clear();
+}
+
+
   @override
   Widget build(BuildContext context) {
     return new _InheritedTreatmentStateContainer(

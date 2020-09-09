@@ -3,7 +3,7 @@ import '../LoginPage.dart';
 import '../main.dart';
 import 'SiteSelection.dart';
 import 'SiteForm.dart';
-import '../Treatment/SubmitTreatment.dart';
+
 import 'package:farmapp/HomePage/HomePage.dart';
 
 class BoardingPage extends StatelessWidget {

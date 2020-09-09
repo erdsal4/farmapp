@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 
 import '../main.dart';
 import '../models/Site.dart';
-import '../providers/User.dart';
-import '../providers/SiteProvider.dart';
+import '../models/User.dart';
+import '../Treatment/StateContainer.dart';
 
 class SiteSelection extends StatelessWidget {
 
@@ -40,26 +40,19 @@ class MyDropdown extends StatefulWidget {
 class _MyDropdownState extends State<MyDropdown> {
 
   Site selectedSite;
-  List<Site> allSites;
-  SiteLoadingStatus status;  
-  
+  Future<List<Site>> siteFuture;
+    
   @override
   void initState() {
-
-    final token = Provider.of<User>(context, listen: false).token;
-    final sites = Provider.of<SiteProvider>(context, listen:false);
-    sites.fetchSites(token);
-    print("initstate");
-
+    print("hereinit");
     super.initState();
   }
 
   @override    
   void didChangeDependencies() async {
 
-    final provider = Provider.of<SiteProvider>(context, listen:true);
-    allSites = provider.sites;
-    status = provider.status;
+    final user = Provider.of<User>(context, listen:true);
+    siteFuture = fetchSites(user.token);
     print("heredidchange");
     super.didChangeDependencies();
     
@@ -67,66 +60,12 @@ class _MyDropdownState extends State<MyDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    final container = TreatmentStateContainer.of(context);
+    
     print("herebuild");
     final user = Provider.of<User>(context, listen: false);    
-    if(status == SiteLoadingStatus.Loading){
-      return Column(
-            children: <Widget>[
-              SizedBox(
-                child: CircularProgressIndicator(),
-                width: 60,
-                height: 60,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting result...'),
-              )
-            ]
-          );
-        }
-    else if(status == SiteLoadingStatus.Loaded){
-      return Container(
-        width: 300.0,
-        decoration: BoxDecoration(
-          border: Border.all(width: 3.0),
-          borderRadius: BorderRadius.all(Radius.circular(5.0))
-        ),
-        child: DropdownButtonHideUnderline(
-          child: ButtonTheme(
-            alignedDropdown: true,
-            child: DropdownButton<Site>(
-              icon: Icon(Icons.arrow_downward),
-              iconSize: 16,
-              elevation: 16,
-              style: TextStyle(color: Colors.black),
-              value: selectedSite,
-              onChanged: (Site newSite) {
-                user.siteN = newSite.name;
-                setState(() {
-                    selectedSite = newSite;
-                });
-                
-              },
-              items: allSites.map<DropdownMenuItem<Site>>((Site site) {
-                  return DropdownMenuItem<Site>(
-                    value: site,
-                    child: Text(site.name, style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5)),
-                  );
-              }).toList(),
-              hint: Text('Select Site')
-            )
-          )
-        )
-      ); 
-    } else{
-      return Text("there was an error");
-    } 
-  }
-}       
-    
-    /*
     return FutureBuilder<List<Site>>(
-      future: future,
+      future: siteFuture,
       builder: (BuildContext context, AsyncSnapshot<List<Site>> snapshot) {
         if(snapshot.hasData) {
           return Container(
@@ -146,6 +85,9 @@ class _MyDropdownState extends State<MyDropdown> {
                   value: selectedSite,
                   onChanged: (Site newSite) {
                     setState(() {
+                        user.siteN = newSite.name;
+                        user.siteId = newSite.id;
+                        container.clear();
                         selectedSite = newSite;
                     });
                     
@@ -181,8 +123,5 @@ class _MyDropdownState extends State<MyDropdown> {
         }
       }
     );
-*/
-
-
-   
-
+  }
+}     
