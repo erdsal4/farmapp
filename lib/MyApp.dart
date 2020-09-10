@@ -9,8 +9,6 @@ import './Treatment/StateContainer.dart';
 import './Treatment/SubmitTreatment.dart';
 
 import './models/User.dart';
-import './providers/SiteProvider.dart';
-
 
 
 class MyApp extends StatelessWidget {
@@ -26,8 +24,6 @@ class MyApp extends StatelessWidget {
     return new MultiProvider(
       providers : [
         Provider<User>(create: (context) => User()),
-        ChangeNotifierProvider<SiteProvider>(create: (context) => SiteProvider())
-        // , ChangeNotifierProvider<TreatmentList>(create: (context) => TreatmentList())
       ],
       child:   TreatmentStateContainer(
         child: MaterialApp(

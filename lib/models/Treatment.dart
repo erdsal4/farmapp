@@ -12,11 +12,21 @@ import 'package:farmapp/widgets/displayDialog.dart';
 class Treatment {
 
   String siteId;
-  String dateofPlanting;
+  DateTime dateofPlanting;
     
-  Map<String, dynamic> features = {};
+  Map<String, dynamic> features = {
+/*    "treatmentName": '',
+    "cropType": '',
+    "numberRows": 0,
+    "numberSeeds": 0,
+    "irrigationSchedule": {
+      "times": 0,
+      "period": ''
+    },
+   "bedDim": List<num>() */
+  };
 
-  Treatment(this.dateofPlanting, this.features, [this.siteId]);
+  Treatment([this.dateofPlanting, this.features , this.siteId]);
 
   factory Treatment.fromJson(Map<String, dynamic> json) {
     return Treatment(
@@ -27,9 +37,10 @@ class Treatment {
   }
 
   Map<String,dynamic> toJson(){
+
     return {
         "site": this.siteId,
-        "dateofPlanting": this.dateofPlanting,
+        "dateofPlanting": this.dateofPlanting.toIso8601String(),
         "features": this.features,
     };
   }
@@ -43,7 +54,9 @@ void submitTreatments(List<Treatment> treatments, String token, BuildContext con
     "x-access-token": token,
     "Content-Type": "application/json"
   };
-  String json = jsonEncode(treatments.map((i) => i.toJson()).toList()).toString();
+  print(treatments.first.dateofPlanting);
+  String json = jsonEncode(treatments.first);
+  //String json = jsonEncode(treatments.map((i) => i.toJson()).toList()).toString();
   print(json);
   var res = await http.post(
     "$SERVER_DOMAIN/treatments",

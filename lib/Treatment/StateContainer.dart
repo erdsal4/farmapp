@@ -26,25 +26,16 @@ class TreatmentStateContainerState extends State<TreatmentStateContainer> {
 
   List<Treatment> treatments;
 
-  void addtoTreatmentList({String dateofPlanting,
-	    String treatmentName,
-      String cropType,
-      num numberRows,
-      num numberSeeds,
-      Map<String, dynamic> irrigationSchedule,
-	    List<num> bedDim	
-  }) {
-    Map<String, dynamic> features = {
+  void addtoTreatmentList(Treatment treatment) {
+ /*   Map<String, dynamic> features = {
       "treatmentName": treatmentName,
       "cropType": cropType,
       "numberRows": numberRows,
       "numberSeeds": numberSeeds,
       "irrigationSchedule": irrigationSchedule,
       "bedDim": bedDim
-    };
-    Treatment treatment = new Treatment(dateofPlanting, features);
-
-    if (treatments == null) {
+    }; */
+      if (treatments == null) {
       setState(() {
           treatments = <Treatment>[treatment];
       });

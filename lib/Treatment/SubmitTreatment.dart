@@ -73,7 +73,7 @@ class SubmitTreatmentListState extends State<SubmitTreatmentList> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            Expanded(child : Column(
+            Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[            
                   RichText(
@@ -92,7 +92,8 @@ class SubmitTreatmentListState extends State<SubmitTreatmentList> {
                   (treatments != null && treatments.length != 0 ? _currentTreatments : Text("No treatment in the list yet")),
             treatmentFormTile,
           ]
-      )),
+        ),
+        SizedBox(height: 30),
       Container(
         width: 300.0,
         child: RaisedButton(
