@@ -6,7 +6,9 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../main.dart';
+import 'package:farmapp/main.dart';
+import 'package:farmapp/HomePage/HomePage.dart';
+import 'package:farmapp/Treatment/StateContainer.dart';
 import 'package:farmapp/widgets/displayDialog.dart';
 
 class Treatment {
@@ -47,6 +49,25 @@ class Treatment {
   
 }
 
+Future<List<Treatment>> fetchTreatments(jwt, siteId) async {
+
+    print("fetchingtreatments");
+    final Map<String,String> headers = {
+      "x-access-token": jwt,
+      "Content-Type": "application/json"
+    };
+    final response = await http.get("https://www.farmsoilmoisture.tk/mobile/treatments/dropdown/${siteId}", headers: headers);
+    if (response.statusCode == 200) {
+      print(response.body);
+      Iterable l = json.decode(response.body);
+      return List<Treatment>.from(l.map((i) => Treatment.fromJson(i)));
+    } else {
+      return List<Treatment>();
+    }
+    
+  }
+
+
 void submitTreatments(List<Treatment> treatments, String token, BuildContext context) async {
 
   print("submittingtreatments");
@@ -54,19 +75,31 @@ void submitTreatments(List<Treatment> treatments, String token, BuildContext con
     "x-access-token": token,
     "Content-Type": "application/json"
   };
-  print(treatments.first.dateofPlanting);
-  String json = jsonEncode(treatments.first);
-  //String json = jsonEncode(treatments.map((i) => i.toJson()).toList()).toString();
-  print(json);
+
+  String json = jsonEncode(treatments.map((i) => i.toJson()).toList()).toString();
+
   var res = await http.post(
-    "$SERVER_DOMAIN/treatments",
+    "$SERVER_DOMAIN/treatments/all",
     body: json,
     headers: headers
      );
      print(res.statusCode);
      print(res.body);
-     if(res.statusCode != 200) {
-        displayDialog(context, "An error occured", "Could not add the treatments.");
-     };
+     if(res.statusCode == 200){
+       displayDialog(context,"Success", "Submitted treatments successfully");
+       await Future.delayed(Duration(seconds: 2));
+       final container = TreatmentStateContainer.of(context);
+       container.clear();
+       Navigator.pushReplacement(
+         context,
+         MaterialPageRoute(
+           builder: (context) => HomePage()
+        )
+      );
 
+     }
+     else {
+        displayDialog(context, "An error occured", "Could not add the treatments, please try again or try later.");
+      };
+      
 }

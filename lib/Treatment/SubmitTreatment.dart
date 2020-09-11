@@ -20,7 +20,6 @@ class SubmitTreatmentListState extends State<SubmitTreatmentList> {
   List<Treatment> treatments;  
 
   Widget get _currentTreatments {
-    print("currenttreatment");
     return treatmentsList(treatments, false);
   }
     

@@ -6,19 +6,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-// import 'package:intl/intl.dart';
 
 import 'StateContainer.dart';
 import 'package:farmapp/models/User.dart';
 import 'package:farmapp/models/Treatment.dart';
-
-class _TreatmentData {
-
-  DateTime dateofPlanting;
-    
-  Map<String, dynamic> features = {};
-  
-}
 
 class TreatmentForm extends StatefulWidget {
   TreatmentForm({Key key}) : super(key: key);
@@ -31,8 +22,8 @@ class _TreatmentFormState extends State<TreatmentForm> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   Treatment _data = new Treatment(DateTime.now(),{"irrigationSchedule":{}, "bedDim" : [0,0]},'');
-  String selectedCrop;
-  String selectedFreq;
+  //String selectedCrop;
+  //String selectedFreq;
   
   Widget freqDropdown() {
     return Container(
@@ -48,11 +39,12 @@ class _TreatmentFormState extends State<TreatmentForm> {
             iconSize: 16,
             elevation: 0,
             style: TextStyle(color: Colors.black),
-            value: selectedFreq,
+            value: this._data.features["irrigationSchedule"]["period"],
+            //selectedFreq,
             onChanged: (String freq) {
               setState(() {
                   this._data.features["irrigationSchedule"]["period"] = freq;
-                  selectedFreq = freq;
+                  //selectedFreq = freq;
               });
               
             },
@@ -85,11 +77,11 @@ class _TreatmentFormState extends State<TreatmentForm> {
             iconSize: 16,
             elevation: 16,
             style: TextStyle(color: Colors.black),
-            value: selectedCrop,
+            value: this._data.features["cropType"],
             onChanged: (String newCrop) {
               setState(() {
                   this._data.features["cropType"] = newCrop;
-                  selectedCrop = newCrop;
+                  // selectedCrop = newCrop;
               });
               
             },

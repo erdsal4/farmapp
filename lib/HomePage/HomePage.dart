@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return new Scaffold(
-      appBar: AppBar(title: Text("Home Page")),
+      appBar: AppBar(title: Text("Home Page"), automaticallyImplyLeading: false),
       body: Container(
         margin: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 10.0),
         padding: EdgeInsets.all(16),
