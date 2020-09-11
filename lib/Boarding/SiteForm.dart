@@ -6,12 +6,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-// import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart'; // to implement location field
 
-import '../main.dart';
-import './BoardingPage.dart';
-import '../models/User.dart';
+import 'package:farmapp/main.dart';
+import 'package:farmapp/models/User.dart';
 import 'package:farmapp/models/Site.dart';
+import 'BoardingPage.dart';
 
 class SiteForm extends StatefulWidget {
   SiteForm({Key key}) : super(key: key);
@@ -89,7 +89,9 @@ class _SiteFormState extends State<SiteForm> {
                               },
                        ),
 
-   /*                    Column(
+   /*Possible implementation of location field                    
+
+                        Column(
                           children: [
                             Align(
                               alignment: Alignment.topLeft,
@@ -154,7 +156,7 @@ class _SiteFormState extends State<SiteForm> {
           final form = _formKey.currentState;
           if (form.validate()) {
             _site.location = {
-              "coordinates": [10,10]
+              "coordinates": [0,0] // default util changed
             };
             await submitSite(_site, token, context);
             Navigator.push(

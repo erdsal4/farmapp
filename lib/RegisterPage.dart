@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import './Boarding/BoardingPage.dart';
-import 'main.dart';
+import 'package:farmapp/Boarding/BoardingPage.dart';
 import 'package:farmapp/widgets/displayDialog.dart';
+import 'main.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key key}) : super(key: key);

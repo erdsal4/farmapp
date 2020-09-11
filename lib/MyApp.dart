@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'dart:convert' show json, base64, ascii;
 import 'package:provider/provider.dart';
 
-import 'LoginPage.dart';
-import './Boarding/BoardingPage.dart';
-import 'main.dart';
-import './Treatment/StateContainer.dart';
-import './Treatment/SubmitTreatment.dart';
 
-import './models/User.dart';
+import 'package:farmapp/Boarding/BoardingPage.dart';
+import 'package:farmapp/Treatment/StateContainer.dart';
+import 'package:farmapp/Treatment/SubmitTreatment.dart';
+import 'package:farmapp/models/User.dart';
+
+import 'LoginPage.dart';
+import 'main.dart';
 
 
 class MyApp extends StatelessWidget {

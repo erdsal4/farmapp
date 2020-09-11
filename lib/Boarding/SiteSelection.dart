@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../main.dart';
-import '../models/Site.dart';
-import '../models/User.dart';
-import '../Treatment/StateContainer.dart';
+import 'package:farmapp/main.dart';
+import 'package:farmapp/models/Site.dart';
+import 'package:farmapp/models/User.dart';
+import 'package:farmapp/Treatment/StateContainer.dart';
 
 class SiteSelection extends StatelessWidget {
 

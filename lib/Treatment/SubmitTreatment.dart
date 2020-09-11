@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'StateContainer.dart';
 import 'TreatmentForm.dart';
-import './treatment_widgets.dart';
+import 'treatment_widgets.dart';
 import 'package:farmapp/models/Treatment.dart';
 import 'package:farmapp/models/User.dart';
 import 'package:farmapp/widgets/buttonRouter.dart';
@@ -19,7 +19,7 @@ class SubmitTreatmentListState extends State<SubmitTreatmentList> {
 
   List<Treatment> treatments;  
 
-  Widget get _currentTreatments {
+  Widget get _currentTreatments{
     return treatmentsList(treatments, false);
   }
     

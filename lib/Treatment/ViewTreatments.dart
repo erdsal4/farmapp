@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:farmapp/models/Treatment.dart';
 import 'package:provider/provider.dart';
 import 'package:farmapp/models/User.dart';
-import './treatment_widgets.dart';
+import 'treatment_widgets.dart';
 
 class ViewPage extends StatelessWidget{
   
@@ -28,6 +28,7 @@ class ViewPage extends StatelessWidget{
                 ],
               ),
             ),
+            SizedBox(height: 30),
             TreatmentList(),
           ]
         )
@@ -60,9 +61,13 @@ class _TreatmentListState extends State<TreatmentList> {
         builder: (BuildContext context, AsyncSnapshot<List<Treatment>> snapshot) {
           List<Widget> children;
           if (snapshot.hasData) {
+            if(snapshot.data.isEmpty){
+              children = <Widget>[ Text("No treatments have been added to this site yet.") ];
+            }else {
             children = <Widget>[
               treatmentsList(snapshot.data, true)
             ];
+          }
           } else if (snapshot.hasError) {
             children = <Widget>[
               Icon(

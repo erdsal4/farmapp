@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../LoginPage.dart';
-import '../main.dart';
+import 'package:farmapp/LoginPage.dart';
+import 'package:farmapp/main.dart';
 import 'SiteSelection.dart';
 import 'SiteForm.dart';
 
@@ -11,7 +11,7 @@ class BoardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(title: Text("Secret Data Screen")),
+      appBar: AppBar(title: Text("Select your site")),
       body: Container(
         margin: EdgeInsets.fromLTRB(10.0, 100.0, 10.0, 100.0),
         padding: EdgeInsets.all(16),
