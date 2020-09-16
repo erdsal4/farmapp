@@ -7,6 +7,7 @@ import 'treatment_widgets.dart';
 import 'package:farmapp/models/Treatment.dart';
 import 'package:farmapp/models/User.dart';
 import 'package:farmapp/widgets/buttonRouter.dart';
+import 'package:farmapp/SizeConfig.dart';
 
 class SubmitTreatmentList extends StatefulWidget {
 
@@ -57,6 +58,13 @@ class SubmitTreatmentListState extends State<SubmitTreatmentList> {
 
   @override
   Widget build(BuildContext context) {
+
+    SizeConfig().init(context);
+    final double horizontalMargin = SizeConfig.safeBlockHorizontal;
+    final double verticalMargin = SizeConfig.safeBlockVertical*6;
+    final double screenWidth = SizeConfig.screenWidth;
+    final double sizedBoxHeight = SizeConfig.safeBlockVertical*2;
+
     final container = TreatmentStateContainer.of(context);
     final user = Provider.of<User>(context, listen: false);
     final siteN = user.siteN;
@@ -68,8 +76,8 @@ class SubmitTreatmentListState extends State<SubmitTreatmentList> {
         title: new Text('Inherited Widget Test'),
       ),
       body: Container(
-        margin: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
-        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.fromLTRB(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin),
+        padding: EdgeInsets.all(horizontalMargin*3),
         child: Column(
           children: [
             Column(
@@ -87,14 +95,14 @@ class SubmitTreatmentListState extends State<SubmitTreatmentList> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: sizedBoxHeight),
                   (treatments != null && treatments.length != 0 ? _currentTreatments : Text("No treatment in the list yet")),
             treatmentFormTile,
           ]
         ),
-        SizedBox(height: 30),
+        SizedBox(height: sizedBoxHeight),
       Container(
-        width: 300.0,
+        width: screenWidth*0.8,
         child: RaisedButton(
           child: Text("Save these treatments to site"),
           onPressed: () => submitTreatments(treatments, token, context)

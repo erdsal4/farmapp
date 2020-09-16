@@ -5,6 +5,7 @@ import 'package:farmapp/widgets/displayDialog.dart';
 
 import 'main.dart';
 import 'RegisterPage.dart';
+import 'MyApp.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -116,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BoardingPage() 
+            builder: (context) => MyApp() 
           )
         );
       } else {

@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:farmapp/main.dart';
 import 'package:farmapp/models/User.dart';
 import 'package:farmapp/models/Site.dart';
+import 'package:farmapp/SizeConfig.dart';
 import 'BoardingPage.dart';
 
 class SiteForm extends StatefulWidget {
@@ -28,6 +29,12 @@ class _SiteFormState extends State<SiteForm> {
   
   Widget build(BuildContext context) {
 
+    SizeConfig().init(context);
+    final double horizontalMargin = SizeConfig.safeBlockHorizontal*10;
+    final double verticalMargin = SizeConfig.safeBlockVertical*2;
+    final double screenWidth = SizeConfig.screenWidth;
+    final double sizedBoxHeight = SizeConfig.safeBlockVertical*3;
+
     
     final token = Provider.of<User>(context, listen: false).token;
     
@@ -35,11 +42,11 @@ class _SiteFormState extends State<SiteForm> {
       appBar: new AppBar( title: new Text('Add Site')),
       body:  Material(
         child: Container(
-          margin: EdgeInsets.fromLTRB(40, 10, 30, 10),
+          margin: EdgeInsets.fromLTRB(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin),
           child: Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: EdgeInsets.only(top: verticalMargin),
                 child: Center(
                 child: Text(
                   "ENTER SITE INFORMATION",
@@ -60,7 +67,7 @@ class _SiteFormState extends State<SiteForm> {
                 Form.of(primaryFocus.context).save();
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: EdgeInsets.symmetric(vertical: verticalMargin),
                 child: ListView(
                   children: <Widget>[                                                               TextFormField(
                       decoration: new InputDecoration(
@@ -70,7 +77,7 @@ class _SiteFormState extends State<SiteForm> {
                           _site.name = value;
                         },
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: sizedBoxHeight),
                       TextFormField(
                         decoration: new InputDecoration(
                           labelText: 'Site State'
@@ -79,7 +86,7 @@ class _SiteFormState extends State<SiteForm> {
                           _site.state = value;
                               },
                             ),
-                            SizedBox(height: 30),
+                            SizedBox(height: sizedBoxHeight),
                       TextFormField(
                         decoration: new InputDecoration(
                           labelText: 'Site City'
@@ -156,7 +163,7 @@ class _SiteFormState extends State<SiteForm> {
           final form = _formKey.currentState;
           if (form.validate()) {
             _site.location = {
-              "coordinates": [0,0] // default util changed
+              "coordinates": [0,0] // default until changed
             };
             await submitSite(_site, token, context);
             Navigator.push(

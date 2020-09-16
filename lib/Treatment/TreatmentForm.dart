@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'StateContainer.dart';
 import 'package:farmapp/models/User.dart';
 import 'package:farmapp/models/Treatment.dart';
+import 'package:farmapp/SizeConfig.dart';
 
 class TreatmentForm extends StatefulWidget {
   TreatmentForm({Key key}) : super(key: key);
@@ -22,9 +23,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   Treatment _data = new Treatment(DateTime.now(),{"irrigationSchedule":{}, "bedDim" : [0,0]},'');
-  //String selectedCrop;
-  //String selectedFreq;
-  
+
   Widget freqDropdown() {
     return Container(
       decoration: BoxDecoration(
@@ -103,6 +102,12 @@ class _TreatmentFormState extends State<TreatmentForm> {
   
   Widget build(BuildContext context) {
 
+    SizeConfig().init(context);
+    final double horizontalMargin = SizeConfig.safeBlockHorizontal*2;
+    final double verticalMargin = SizeConfig.safeBlockVertical*6;
+    final double screenWidth = SizeConfig.screenWidth;
+    final double sizedBoxHeight = SizeConfig.safeBlockVertical*3;
+    
     final container = TreatmentStateContainer.of(context);
     final user = Provider.of<User>(context, listen: false);
     final siteN = user.siteN;
@@ -114,11 +119,12 @@ class _TreatmentFormState extends State<TreatmentForm> {
       appBar: new AppBar( title: new Text('Create new treatment')),
       body:  Material(
         child: Container(
-          margin: EdgeInsets.fromLTRB(40, 10, 30, 10),
+          margin: EdgeInsets.fromLTRB(horizontalMargin, 0, horizontalMargin, verticalMargin),
+          padding: EdgeInsets.all(horizontalMargin*3),
           child: Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: EdgeInsets.only(top: sizedBoxHeight),
                 child: Center(
                 child: Text(
                   "ENTER TREATMENT INFORMATION",
@@ -140,7 +146,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
                 Form.of(primaryFocus.context).save();
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: EdgeInsets.symmetric(vertical: sizedBoxHeight),
                 child: ListView(
                   children: <Widget>[
                     Column(
@@ -157,7 +163,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
                       enabled: false
                     ),
                 ]),
-                SizedBox(height:30),
+                SizedBox(height:sizedBoxHeight),
                     TextFormField(
                       decoration: new InputDecoration(
                         labelText: 'Treatment Name'
@@ -167,7 +173,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
                           this._data.features["treatmentName"] = value;
                         },
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: sizedBoxHeight),
                       InputDatePickerFormField(
                         initialDate: _data.dateofPlanting, 
                         firstDate: new DateTime(2010,1,1),
@@ -175,9 +181,9 @@ class _TreatmentFormState extends State<TreatmentForm> {
                         fieldLabelText: "Enter date of planting",
                         onDateSaved: (DateTime newDate) => {this._data.dateofPlanting = newDate}
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: sizedBoxHeight),
                       cropDropdown(),
-                      SizedBox(height: 30),
+                      SizedBox(height: sizedBoxHeight),
                       TextFormField(
                         inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                         keyboardType: TextInputType.number,
@@ -188,7 +194,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
                           this._data.features["numberRows"] = int.parse(value);
                               },
                             ),
-                        SizedBox(height: 30),
+                        SizedBox(height: sizedBoxHeight),
                         TextFormField(
                           inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                           keyboardType: TextInputType.number,
@@ -199,12 +205,12 @@ class _TreatmentFormState extends State<TreatmentForm> {
                             this._data.features["numberSeeds"] = int.parse(value);
                           },
                         ),
-                        SizedBox(height: 30),
+                        SizedBox(height: sizedBoxHeight),
                       
                         Row(
                           children: [
                             Container(
-                              width: 150,
+                              width: screenWidth*0.4,
                               child: TextFormField(
                                 inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 keyboardType: TextInputType.number,
@@ -217,7 +223,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
                             )),
                             Expanded(child: Container(child:freqDropdown()))
                         ]),
-                        SizedBox(height:40),
+                        SizedBox(height:sizedBoxHeight),
                         Column(
                           children: [
                             Align(
@@ -227,7 +233,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
                             Row(
                               children: [
                                 Container(
-                              width: 100,
+                              width: screenWidth*0.3,
                               child: TextFormField(
                                 inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 keyboardType: TextInputType.number,
@@ -240,7 +246,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
                             )),
                             Text("   X   "),
                             Container(
-                              width: 100,
+                              width: screenWidth*0.3,
                               child: TextFormField(
                                 inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 keyboardType: TextInputType.number,
@@ -254,7 +260,7 @@ class _TreatmentFormState extends State<TreatmentForm> {
                             )
                       ])]
                     ),
-                        SizedBox(height:40)
+                        SizedBox(height:sizedBoxHeight)
                         
                       
                       ]

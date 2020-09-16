@@ -5,26 +5,34 @@ import 'SiteSelection.dart';
 import 'SiteForm.dart';
 
 import 'package:farmapp/HomePage/HomePage.dart';
+import 'package:farmapp/SizeConfig.dart';
 
 class BoardingPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context){
+
+    SizeConfig().init(context);
+    final double horizontalMargin = SizeConfig.safeBlockHorizontal*3;
+    final double verticalMargin = SizeConfig.safeBlockVertical*15;
+    final double screenWidth = SizeConfig.screenWidth;
+    final double sizedBoxHeight = SizeConfig.safeBlockVertical*2;
+    
     return Scaffold(
       appBar: AppBar(title: Text("Select your site")),
       body: Container(
-        margin: EdgeInsets.fromLTRB(10.0, 100.0, 10.0, 100.0),
-        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.fromLTRB(horizontalMargin, verticalMargin,horizontalMargin,verticalMargin),
+        padding: EdgeInsets.all(horizontalMargin),
         child: Column(
         children: <Widget>[
           Expanded(
-           child: SiteSelection()
+            child: SiteSelection()
           ),
           Column(
             children: <Widget>[
               
               Container(
-                width: 300.0,
+                width: screenWidth*0.75,
                 child: RaisedButton(
                 child: Text("Save and go to Home Page"),
                 onPressed: () =>
@@ -36,9 +44,9 @@ class BoardingPage extends StatelessWidget {
                   )
                 )
               ),
-              SizedBox(height: 20),
+              SizedBox(height: sizedBoxHeight),
               Container(
-                width: 300.0,
+                width: screenWidth*0.75,
                 child: RaisedButton(
                   child: Text("Add new Site"),
                   onPressed: () =>
@@ -50,9 +58,9 @@ class BoardingPage extends StatelessWidget {
                   )
                   )
                 ),
-              SizedBox(height: 20),
+                SizedBox(height: sizedBoxHeight),
               Container(
-                width: 300.0,
+                width: screenWidth*0.75,
                 child: RaisedButton(
                 child: Text("Back to login screen"),
                 onPressed: () =>

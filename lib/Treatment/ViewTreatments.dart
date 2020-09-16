@@ -2,18 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:farmapp/models/Treatment.dart';
 import 'package:provider/provider.dart';
 import 'package:farmapp/models/User.dart';
+import 'package:farmapp/SizeConfig.dart';
 import 'treatment_widgets.dart';
 
 class ViewPage extends StatelessWidget{
   
   @override
   Widget build(BuildContext context){
+
+    SizeConfig().init(context);
+    final double horizontalMargin = SizeConfig.safeBlockHorizontal;
+    final double verticalMargin = SizeConfig.safeBlockVertical*6;
+    final double screenWidth = SizeConfig.screenWidth;
+    final double sizedBoxHeight = SizeConfig.safeBlockVertical*3;
+    
     final user = Provider.of<User>(context, listen: false);
     final siteN = user.siteN;
     return Scaffold(
       appBar: AppBar(title: Text("View Treatments")),
       body: Container(
-        margin: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
+        margin: EdgeInsets.fromLTRB(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin),
+        padding: EdgeInsets.all(horizontalMargin*3),
         child: Column(
           children: [
             RichText(
@@ -28,7 +37,7 @@ class ViewPage extends StatelessWidget{
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: sizedBoxHeight),
             TreatmentList(),
           ]
         )

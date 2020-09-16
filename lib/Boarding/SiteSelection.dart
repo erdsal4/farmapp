@@ -10,17 +10,22 @@ import 'package:farmapp/main.dart';
 import 'package:farmapp/models/Site.dart';
 import 'package:farmapp/models/User.dart';
 import 'package:farmapp/Treatment/StateContainer.dart';
+import 'package:farmapp/SizeConfig.dart';
 
 class SiteSelection extends StatelessWidget {
-
+    
   @override
   Widget build(BuildContext context) {
+
+    SizeConfig().init(context);
+    final double sizedBoxHeight = SizeConfig.safeBlockVertical*2;
+
     return Scaffold(
       body: Column(
           children: <Widget>[
             Text("Select a site", style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5)),
-            SizedBox(height: 15),
-            MyDropdown()          
+            SizedBox(height: sizedBoxHeight),
+            Container(child: MyDropdown())       
           ]
         )
       );
@@ -52,6 +57,7 @@ class _MyDropdownState extends State<MyDropdown> {
   void didChangeDependencies() async {
 
     final user = Provider.of<User>(context, listen:true);
+    print("token" + user.token);
     siteFuture = fetchSites(user.token);
     print("heredidchange");
     super.didChangeDependencies();
@@ -60,7 +66,13 @@ class _MyDropdownState extends State<MyDropdown> {
 
   @override
   Widget build(BuildContext context) {
+
     final container = TreatmentStateContainer.of(context);
+    SizeConfig().init(context);
+    final double horizontalMargin = SizeConfig.safeBlockHorizontal;
+    final double verticalMargin = SizeConfig.safeBlockVertical*15;
+    final double screenWidth = SizeConfig.screenWidth;
+    final double sizedBoxHeight = SizeConfig.safeBlockVertical*2;
     
     print("herebuild");
     final user = Provider.of<User>(context, listen: false);    
@@ -68,18 +80,19 @@ class _MyDropdownState extends State<MyDropdown> {
       future: siteFuture,
       builder: (BuildContext context, AsyncSnapshot<List<Site>> snapshot) {
         if(snapshot.hasData) {
-          return Container(
-            width: 300.0,
+          return Center(
+            child: Container(
+            width: screenWidth*0.8,
             decoration: BoxDecoration(
               border: Border.all(width: 3.0),
-              borderRadius: BorderRadius.all(Radius.circular(5.0))
+              borderRadius: BorderRadius.all(Radius.circular(horizontalMargin*2))
             ),
             child: DropdownButtonHideUnderline(
               child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton<Site>(
                   icon: Icon(Icons.arrow_downward),
-                  iconSize: 16,
+                  iconSize: sizedBoxHeight,
                   elevation: 16,
                   style: TextStyle(color: Colors.black),
                   value: selectedSite,
@@ -102,7 +115,8 @@ class _MyDropdownState extends State<MyDropdown> {
                 )
               )
             )
-          ); 
+          )
+        ); 
         } else if (snapshot.hasError) {
           return Text("there was an error");
           
@@ -111,8 +125,8 @@ class _MyDropdownState extends State<MyDropdown> {
             children: <Widget>[
               SizedBox(
                 child: CircularProgressIndicator(),
-                width: 60,
-                height: 60,
+                width: sizedBoxHeight*3,
+                height: sizedBoxHeight*3,
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 16),
