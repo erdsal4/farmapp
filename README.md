@@ -13,6 +13,6 @@ found in this repo.
 
 # Run
 
-This app was built within the Flutter framework, so one should run it as a Flutter app. The instruc-
-tions for installing Flutter and running a Flutter app on IOS and Android are given on the official
+This app was built within the Flutter framework, so one should run it as a Flutter app. The instructions
+for installing Flutter and running a Flutter app on IOS and Android are given on the official
 website: https://flutter.dev/docs/get-started/install
